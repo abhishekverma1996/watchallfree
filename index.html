@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -6,325 +6,1334 @@
     <meta http-equiv='cache-control' content='no-cache'>
     <meta http-equiv='expires' content='0'>
     <meta http-equiv='pragma' content='no-cache'>
-    <title>WatchAllfree</title>
-    <meta name="description" content="">
+    <title>WatchAllFree - Stream Movies & TV Shows Free</title>
+    <meta name="description" content="Stream movies and TV shows for free using IMDb IDs. No subscription required.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --secondary-color: #4169e1;
+            --accent-color: #ff4d94;
+            --bg-dark: #0f0c29;
+            --bg-darker: #09071c;
+            --card-bg: #1a1736;
+            --text-light: #f0f0f0;
+            --text-muted: #a0a0c0;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #ff0000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #8000ff, #ff00ff, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% auto;
+            animation: rainbow 3s linear infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+            border-top: 1px solid rgba(138, 43, 226, 0.4);
+            margin-top: 2rem;
+        }
+        
+        .card-modern {
+            background: rgba(26, 23, 54, 0.85);
+            border-radius: 16px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(4px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(138, 43, 226, 0.3);
+            border-color: rgba(138, 43, 226, 0.4);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 28px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(65, 105, 225, 0.4);
+        }
+        
+        .btn-pagination {
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid rgba(138, 43, 226, 0.4);
+            color: var(--text-light);
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-pagination:hover {
+            background: rgba(138, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .btn-pagination.active {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border: none;
+        }
+        
+        .input-modern {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+        
+        .input-modern:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+            color: white;
+            outline: none;
+        }
+        
+        .input-modern::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .player-container {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            background: #000;
+            height: 100%;
+            position: relative;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+        }
+        
+        .player-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        iframe {
+            border: none;
+            width: 100%;
+        }
+        
+        .result-item {
+            background: var(--card-bg);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 16px;
+            padding: 16px;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(138, 43, 226, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-image {
+            border-radius: 12px;
+            object-fit: cover;
+            aspect-ratio: 2/3;
+            width: 100%;
+            background: linear-gradient(45deg, #2c285c, #1a1736);
+            transition: transform 0.3s ease;
+        }
+        
+        .result-item:hover .result-image {
+            transform: scale(1.03);
+        }
+        
+        .history-table {
+            background: rgba(26, 23, 54, 0.7);
+            border-radius: 14px;
+            overflow: hidden;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        
+        .history-table th {
+            background: rgba(138, 43, 226, 0.2);
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .history-table td {
+            color: var(--text-light);
+            vertical-align: middle;
+            font-size: 0.9rem;
+            padding: 8px 10px;
+        }
+        
+        .history-table tr:hover {
+            background: rgba(65, 105, 225, 0.1);
+        }
+        
+        .badge-type {
+            background: linear-gradient(90deg, var(--accent-color), #ff7bac);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .section-divider {
+            height: 3px;
+            width: 60px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 3px;
+            margin: 8px 0;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--text-muted);
+        }
+        
+
+        
+        /* New Header Styles */
+        .main-header {
+            background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(138, 43, 226, 0.4);
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Ensure header is properly spaced on mobile */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 0.6rem 1rem;
+                margin-bottom: 1rem;
+                background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+            }
+        }
+        
+        .brand-title {
+            font-size: 1.7rem;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1.2;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .brand-tagline {
+            font-size: 0.85rem;
+            color: white;
+            margin: 0.2rem 0 0;
+            font-weight: 300;
+        }
+        
+        .search-form-header {
+            background: rgba(26, 23, 54, 0.7);
+            border-radius: 14px;
+            padding: 0.5rem;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .search-input-container {
+            position: relative;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1rem 1.5rem;
+        }
+        
+        .form-label {
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .info-note {
+            background: rgba(65, 105, 225, 0.15);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        /* Search Results Modal */
+        .modal-custom {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content-custom {
+            background: rgba(26, 23, 54, 0.95);
+            border-radius: 16px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            margin: 4vh auto;
+            padding: 20px;
+        }
+        
+        /* Improve modal responsiveness on small screens */
+        @media (max-width: 576px) {
+            .modal-content-custom {
+                width: 95%;
+                margin: 2vh auto;
+                padding: 15px;
+            }
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .close-modal:hover {
+            background: rgba(255, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        /* Search input in modal */
+        .modal-search-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            padding: 12px 15px;
+            font-size: 1rem;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        .modal-search-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
+            color: white;
+            outline: none;
+        }
+        
+        .modal-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Visual indicator for active search */
+        .search-active-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(138, 43, 226, 0.8);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            z-index: 1001;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Pagination styles */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .stats-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 0.8rem 1rem;
+            }
+            
+            .brand-title {
+                font-size: 1.6rem;
+                text-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+            }
+            
+            .brand-tagline {
+                font-size: 0.75rem;
+            }
+            
+            .search-form-header {
+                margin-top: 0.8rem;
+                max-width: 100%;
+            }
+            
+            .card-modern {
+                padding: 1rem;
+            }
+            
+            .section-divider {
+                margin: 6px auto;
+            }
+            
+            .result-item {
+                padding: 12px;
+            }
+            
+            .modal-content-custom {
+                width: 95%;
+                margin: 2.5vh auto;
+                padding: 15px;
+                max-height: 90vh;
+            }
+            
+            .history-table {
+                max-height: 300px;
+            }
+            
+            /* iframe height is now controlled by aspect ratio */
+            
+            .btn-gradient {
+                padding: 10px 20px;
+                width: 100%;
+            }
+            
+            .result-item .row > div:first-child {
+                padding-bottom: 0.8rem;
+            }
+            
+            .history-table th, .history-table td {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
+            
+            .btn-pagination {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .modal-search-input {
+                font-size: 0.95rem;
+                padding: 10px 12px;
+            }
+            
+            /* Stack columns on mobile */
+            .two-column-layout {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-column, .player-column {
+                min-width: 100%;
+            }
+            
+            /* Ensure search input is properly sized on mobile */
+            .input-modern {
+                font-size: 1rem;
+                padding: 12px 40px 12px 15px;
+            }
+            
+            .footer {
+                margin-top: 1.5rem;
+                background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            /* iframe height is now controlled by aspect ratio */
+            
+            .brand-title {
+                font-size: 1.5rem;
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+            }
+            
+            .brand-tagline {
+                font-size: 0.7rem;
+            }
+            
+            .input-modern {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .btn-gradient {
+                padding: 10px 15px;
+            }
+            
+            .result-item {
+                padding: 10px;
+            }
+            
+            .modal-content-custom {
+                width: 96%;
+                margin: 2vh auto;
+                padding: 12px;
+            }
+            
+            .close-modal {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+                top: 12px;
+                right: 12px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .search-section {
+                margin-top: 1rem;
+            }
+            
+            /* Adjust modal search input for small screens */
+            .modal-search-input {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+            
+            .footer {
+                margin-top: 1.5rem;
+                padding: 1rem 0;
+                background: linear-gradient(135deg, #6a5acd 0%, #9370db 100%);
+            }
+        }
+        
+        /* Two-column layout for larger screens */
+        @media (min-width: 992px) {
+            .header-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            
+            .brand-section {
+                flex: 1;
+                min-width: 300px;
+            }
+            
+            .search-section {
+                flex: 2;
+                max-width: 600px;
+            }
+            
+            .two-column-layout {
+                display: flex;
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+            }
+            
+            .search-column {
+                flex: 1;
+                min-width: 350px;
+            }
+            
+            .player-column {
+                flex: 2;
+                min-width: 500px;
+            }
+        }
+        
+        /* Ensure equal height columns on larger screens */
+        @media (min-width: 992px) {
+            .search-column, .player-column {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .card-modern {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .history-table, .player-container {
+                flex: 1;
+            }
+        }
+    </style>
 </head>
 
-<body class="p-3">
-    <div class="justify-content-center align-self-center text-center">
-        <h1 class="fw-bold fst-italic">Wanna watch a movie or a TV show?</h1>
-        <h2 class="fst-italic">You've come to the right place!</h2>
+<body>
+    <!-- Visual indicator for active search -->
+    <div id="search-active-indicator" class="search-active-indicator">
+        <i class="bi bi-search"></i> Search Active - Type to search, ESC to close
     </div>
 
-    <div class="align-self-center container-flex card m-2 mt-3 p-2">
-        <form method="get" class="justify-content-center align-self-center gap-3 m-2 width-auto"
-            onsubmit="event.preventDefault(); get_iframe(); return false;">
-            <input type="text" id="id" placeholder="IMDb ID (e.g. tt1553656)" class="width-auto my-2"
-                style="max-width: 100%" required>
-            <input type="number" id="season" placeholder="Season Number (e.g. 1)" class="width-auto my-2"
-                style="max-width: 100%">
-            <input type="number" id="episode" placeholder="Episode Number (e.g. 1)" class="width-auto my-2"
-                style="max-width: 100%">
-            <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        <p class="text-info align-self-center">If you want to watch a movie, leave the "Season Number" and "Episode
-            Number" fields empty.
-        </p>
-    </div>
-
-    <div class="accordion">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#search-accordion" aria-expanded="true" aria-controls="search-accordion">
-                    Search By Title
-                </button>
-            </h2>
-            <div id="search-accordion" class="accordion-collapse collapse show" aria-expanded="true">
-                <div class="accordion-body">
-                    <div>
-                        <form method="get" onsubmit="event.preventDefault(); 
-                                        search(); return false;">
-                            <label for="q_field">Title:</label>
-                            <input type="text" id="q_field" placeholder="e.g. John Wick" oninput="search();">
-                            <button type="submit" class="btn btn-primary">Search</button>
-                        </form>
+    <!-- New Header with Brand and Search -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="brand-section">
+                <h1 class="brand-title gradient-text">WatchAllFree</h1>
+                <p class="brand-tagline">Stream Movies & TV Shows for Free</p>
+            </div>
+            <div class="search-section">
+                <div class="search-form-header">
+                    <label for="header-search" class="form-label text-light mb-1">Search movie/series by name</label>
+                    <div class="search-input-container">
+                        <input type="text" id="header-search" placeholder="e.g. John Wick, Avengers, etc." class="input-modern">
+                        <span class="search-icon">
+                            <i class="bi bi-search"></i>
+                        </span>
                     </div>
-                    <div id="search-results">
+                </div>
+            </div>
+        </div>
+    </header>
 
+    <div class="main-content">
+        <!-- Two-column layout for larger screens -->
+        <div class="two-column-layout">
+            <!-- Left Column - Watch Content Form and History -->
+            <div class="search-column">
+                <!-- Main Search Form (IMDb ID, Season, Episode) -->
+                <div class="card-modern p-3 mb-3">
+                    <h2 class="h4 fw-bold">Watch Content</h2>
+                    <div class="section-divider"></div>
+                    
+                    <form method="get" onsubmit="event.preventDefault(); get_iframe(); return false;">
+                        <div class="mb-2">
+                            <label for="id" class="form-label">IMDb ID</label>
+                            <input type="text" id="id" placeholder="e.g. tt1553656" class="input-modern" required>
+                            <div class="form-text text-muted mt-1">Enter the IMDb ID of the movie or TV show you want to watch</div>
+                        </div>
+                        
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-2">
+                                <label for="season" class="form-label">Season Number</label>
+                                <input type="number" id="season" placeholder="e.g. 1" class="input-modern">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label for="episode" class="form-label">Episode Number</label>
+                                <input type="number" id="episode" placeholder="e.g. 1" class="input-modern">
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid mt-2">
+                            <button type="submit" class="btn-gradient">Stream Now <i class="bi bi-play-circle ms-2"></i></button>
+                        </div>
+                        
+                        <div class="info-note mt-2">
+                            <i class="bi bi-info-circle me-2"></i> For movies, leave Season and Episode fields empty
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Watch History -->
+                <div class="card-modern p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h2 class="h4 fw-bold mb-0">Watch History</h2>
+                            <div class="section-divider mb-0"></div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-light rounded-pill py-1 px-2" onclick="clear_history();">
+                            <i class="bi bi-trash3"></i> Clear
+                        </button>
+                    </div>
+                    
+                    <div class="history-table">
+                        <table id="watched" class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">S/E</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Player -->
+            <div class="player-column">
+                <!-- Video Player -->
+                <div class="card-modern p-2">
+                    <h2 class="h4 fw-bold">Video Player</h2>
+                    <div class="section-divider mb-2"></div>
+                    <div class="player-container">
+                        <iframe src="" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="d-flex justify-content-center p-3" style="width: 100%;">
-        <iframe src="" width="1200px" height="600px" allowfullscreen></iframe>
-    </div>
-
-    <div class="card container-flex">
-        <div class="d-flex justify-content-between m-3">
-            <h3>Watch History</h3>
-            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="clear_history();">
-                <i class="bi bi-trash3"></i> Clear History
-            </button>
+    
+    <!-- Search Results Modal -->
+    <div id="search-results-modal" class="modal-custom">
+        <div class="modal-content-custom">
+            <button class="close-modal" onclick="closeSearchModal()">&times;</button>
+            <h2 class="h4 fw-bold">Search Results</h2>
+            <div class="section-divider"></div>
+            
+            <!-- Search input inside modal for visibility -->
+            <input type="text" id="modal-search-input" placeholder="Search movie/series by name..." class="modal-search-input">
+            
+            <div id="search-results-container">
+                <div id="search-results">
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">Search results will appear here</p>
+                        <small class="text-muted">Type to search for movies or TV series</small>
+                    </div>
+                </div>
+                <div id="pagination-controls" class="pagination-container d-none">
+                    <!-- Pagination buttons will be inserted here -->
+                </div>
+                <div id="search-stats" class="stats-text d-none">
+                    <!-- Search stats will be inserted here -->
+                </div>
+            </div>
         </div>
-        <table id="watched" class="table">
-            <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Season</th>
-                    <th scope="col">Episode</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
     </div>
 
-    <script type="text/javascript">
-
-        function clear_history() {
-            localStorage.clear();
-            document.querySelector("#watched tbody").innerHTML = "";
-        };
-
-        function add_result(item) {
-            const results = document.querySelector("#search-results");
-
-            if (results.innerHTML === "No results matching your query!") {
-                results.innerHTML = "";
-            };
-
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.classList.add("d-flex");
-            card.classList.add("m-3");
-            card.classList.add("p-3");
-            card.style.width = "100%";
-            card.style.cursor = "pointer";
-
-            const card_body = document.createElement("div");
-            card_body.classList.add("card-body");
-
-            const card_image = document.createElement("img");
-            card_image.src = item.i;
-            card_image.height = "20vw";
-            card_image.width = "20vw";
-
-            const card_title = document.createElement("h5");
-            card_title.classList.add("card-title");
-            card_title.innerHTML = item.l + ` (${item.y})`;
-
-            const card_type = document.createElement("h6");
-            card_type.classList.add("card-title-secondary");
-            card_type.innerHTML = item.q === "feature" ? "Movie" : item.q;
-
-            const card_text = document.createElement("p");
-            card_text.classList.add("card-text");
-            card_text.innerHTML = item.s;
-
-            const card_id = document.createElement("p");
-            card_id.classList.add("card-link");
-            card_id.innerHTML = `IMDb ID: ${item.id}`;
-
-            card.appendChild(card_image);
-            card_body.appendChild(card_title);
-            card_body.appendChild(card_type);
-            card_body.appendChild(card_text);
-            card_body.appendChild(card_id);
-
-            card.appendChild(card_body);
-
-            card.addEventListener("click", function () {
-                document.querySelector("#id").value = item.id;
-                window.scrollTo(0, 0);
-            });
-
-            results.appendChild(card);
-        }
-
-        function search() {
-            let q = document.querySelector("#q_field").value;
-            q = q.replaceAll(" ", "_");
-            //q = encodeURIComponent(q.trim());
-
-            // console.log(q);
-
-            const results_list = document.querySelector("#search-results");
-            // console.log(results_list);
-
-            // 2) Using jQuery (JSON-P)
-            jQuery.ajax({
-                url: `https://sg.media-imdb.com/suggests/f/${q}.json`,
-                dataType: 'jsonp',
-                cache: true,
-                jsonp: false,
-                jsonpCallback: `imdb$${q}`
-            }).then(function (results) {
-
-                results_list.innerHTML = "No results matching your query!";
-
-                //console.log(results);
-
-                for (let item in results.d) {
-                    item = results.d[item];
-                    // console.log(item.id);
-                    if (item.id.slice(0, 2) === 'tt') {
-                        add_result(item);
-                    }
-                }
-            });
-
-        }
-
-        function get_iframe() {
-            iframe = document.querySelector('iframe');
-
-            id = document.querySelector('#id').value;
-            season = document.querySelector('#season').value;
-            episode = document.querySelector('#episode').value;
-
-            title_tag = document.querySelector('title');
-            var title;
-
-            if (season && episode) {
-                iframe.src = `https://multiembed.mov/?video_id=${id}&s=${season}&e=${episode}`;
-            }
-            else {
-                iframe.src = `https://multiembed.mov/?video_id=${id}`;
-            }
-
-            jQuery.ajax({
-                url: `https://sg.media-imdb.com/suggests/f/${id}.json`,
-                dataType: 'jsonp',
-                cache: true,
-                jsonp: false,
-                jsonpCallback: `imdb$${id}`
-            }).then(function (results) {
-                for (var i = 0; i < results.d.length; i++) {
-                    if (results.d[i].id.slice(0, 2) === 'tt') {
-                        item = results.d[i];
-                        break;
-                    }
-                }
-
-                title = item.l;
-
-                var watched = localStorage.getItem('watched');
-
-                if (watched === null) {
-                    watched = [];
-                }
-                else {
-                    watched = JSON.parse(watched);
-                }
-
-                current = {
-                    id: id,
-                    title: title,
-                    season: season,
-                    episode: episode
-                };
-
-                watched.push(current);
-
-                localStorage.setItem('watched', JSON.stringify(watched));
-
-                update_watched();
-
-                title_tag.innerHTML = `Streaming  - ${title}`;
-
-            });
-
-            history.pushState({}, null, `?id=${id}&s=${season}&e=${episode}`);
-
-            iframe.scrollIntoView();
-
-        }
-
-        function update_watched() {
-            var watched = localStorage.getItem('watched');
-            if (watched === null) {
-                watched = [];
-            }
-            else {
-                watched = JSON.parse(watched);
-            }
-
-            console.log(watched);
-
-            var table = document.querySelector('tbody');
-            table.innerHTML = '';
-
-            for (var i = 0; i < watched.length; i++) {
-                var item = watched[watched.length - i - 1];
-
-                // console.log(item);
-
-                var row = document.createElement('tr');
-                row.dataset.item = item;
-
-                // row.role = 'a';
-                row.setAttribute('data-href', `?id=${item.id}&s=${item.season}&e=${item.episode}`);
-
-                row.style.cursor = 'pointer';
-
-                var id = document.createElement('td');
-                id.innerHTML = item.id;
-
-                var title = document.createElement('td');
-                title.innerHTML = item.title;
-
-                var season = document.createElement('td');
-                season.innerHTML = item.season;
-
-                var episode = document.createElement('td');
-                episode.innerHTML = item.episode;
-
-                row.appendChild(id);
-                row.appendChild(title);
-                row.appendChild(season);
-                row.appendChild(episode);
-
-                table.appendChild(row);
-            }
-
-            var rows = document.querySelectorAll('tr');
-
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    window.location.href = row.dataset.href;
-                });
-            });
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-
-        if (urlParams.has('id')) {
-            document.querySelector('#id').value = urlParams.get('id');
-            document.querySelector('#season').value = urlParams.get('s');
-            document.querySelector('#episode').value = urlParams.get('e');
-            get_iframe();
-        }
-
-        update_watched();
-
-    </script>
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
         integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
         crossorigin="anonymous"></script>
+    
+    <!-- Footer -->
+    <footer class="footer mt-auto py-3">
+        <div class="container text-center">
+            <span class="text-light">Made with <i class="bi bi-heart-fill text-danger"></i> by lootdailyoffers</span>
+        </div>
+    </footer>
+    
+    <script type="text/javascript">
+        // Pagination variables
+        let currentPage = 1;
+        const itemsPerPage = 6;
+        let searchResults = [];
+        let searchTimeout; // To manage debouncing
+        let isSearchActive = false; // Track if search is active
+        let currentSearchTerm = ""; // Track current search term
+        
+        // Function to clear history
+        function clear_history() {
+            localStorage.clear();
+            document.querySelector("#watched tbody").innerHTML = "";
+            update_watched(); // Refresh to show empty state
+        };
+        
+        // Function to show search active indicator
+        function showSearchIndicator() {
+            document.getElementById("search-active-indicator").style.display = "block";
+            isSearchActive = true;
+        }
+        
+        // Function to hide search active indicator
+        function hideSearchIndicator() {
+            document.getElementById("search-active-indicator").style.display = "none";
+            isSearchActive = false;
+        }
+        
+        // Function to trigger search from header
+        function searchFromHeader() {
+            const searchTerm = document.querySelector("#header-search").value.trim();
+            currentSearchTerm = searchTerm;
+            if (searchTerm.length >= 2) {
+                search();
+            } else if (searchTerm.length === 0) {
+                // If search box is empty, clear results
+                document.querySelector("#search-results").innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">Search results will appear here</p>
+                        <small class="text-muted">Type to search for movies or TV series</small>
+                    </div>
+                `;
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+            } else {
+                // If less than 2 characters, show appropriate message
+                document.querySelector("#search-results").innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">Enter at least 2 characters to search</p>
+                        <small class="text-muted">Try searching for movies or TV shows</small>
+                    </div>
+                `;
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+            }
+        }
+        
+        // Function to trigger search from modal input
+        function searchFromModal() {
+            const searchTerm = document.querySelector("#modal-search-input").value.trim();
+            currentSearchTerm = searchTerm;
+            // Sync with header search
+            document.querySelector("#header-search").value = searchTerm;
+            
+            if (searchTerm.length >= 2) {
+                search();
+            } else if (searchTerm.length === 0) {
+                // If search box is empty, clear results
+                document.querySelector("#search-results").innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">Search results will appear here</p>
+                        <small class="text-muted">Type to search for movies or TV series</small>
+                    </div>
+                `;
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+            } else {
+                // If less than 2 characters, show appropriate message
+                document.querySelector("#search-results").innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">Enter at least 2 characters to search</p>
+                        <small class="text-muted">Try searching for movies or TV shows</small>
+                    </div>
+                `;
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+            }
+        }
+        
+        // Function to open search results modal
+        function openSearchModal() {
+            document.getElementById("search-results-modal").style.display = "block";
+            // Show search active indicator
+            showSearchIndicator();
+            // Set modal search input value to current search term
+            document.querySelector("#modal-search-input").value = currentSearchTerm;
+            // Focus on modal search input
+            document.querySelector("#modal-search-input").focus();
+            // Disable keyboard input on background elements
+            document.body.style.overflow = 'hidden';
+            // Prevent tab navigation to background elements
+            document.querySelectorAll('input, button, a').forEach(element => {
+                if (!element.closest('#search-results-modal')) {
+                    element.tabIndex = -1;
+                }
+            });
+        }
+        
+        // Function to close search results modal
+        function closeSearchModal() {
+            document.getElementById("search-results-modal").style.display = "none";
+            // Hide search active indicator
+            hideSearchIndicator();
+            // Re-enable keyboard input
+            document.body.style.overflow = '';
+            // Restore tab navigation
+            document.querySelectorAll('input, button, a').forEach(element => {
+                element.tabIndex = 0;
+            });
+            // Focus back on header search
+            document.querySelector("#header-search").focus();
+        }
+
+        function add_result(item) {
+            const resultsContainer = document.querySelector("#search-results");
+            
+            const card = document.createElement("div");
+            card.classList.add("result-item");
+            
+            const row = document.createElement("div");
+            row.classList.add("row");
+            
+            const colImg = document.createElement("div");
+            colImg.classList.add("col-md-3", "mb-3", "mb-md-0");
+            
+            const colDetails = document.createElement("div");
+            colDetails.classList.add("col-md-9");
+            
+            const card_image = document.createElement("img");
+            card_image.src = item.i || 'https://placehold.co/150x225/1a1736/8a2be2?text=No+Image';
+            card_image.classList.add("result-image");
+            card_image.alt = item.l;
+            
+            const card_title = document.createElement("h5");
+            card_title.classList.add("fw-bold", "mb-2");
+            card_title.innerHTML = item.l;
+            
+            const card_year = document.createElement("p");
+            card_year.classList.add("text-muted", "mb-2", "small");
+            card_year.innerHTML = item.y ? `(${item.y})` : '';
+            
+            const card_type = document.createElement("span");
+            card_type.classList.add("badge-type", "me-2");
+            card_type.innerHTML = item.q === "feature" ? "Movie" : item.q === "TV series" ? "TV Series" : item.q || "Media";
+            
+            const card_text = document.createElement("p");
+            card_text.classList.add("mb-2", "small");
+            card_text.innerHTML = item.s || 'No description available';
+            
+            const card_id = document.createElement("p");
+            card_id.classList.add("text-info", "mb-0", "small");
+            card_id.innerHTML = `IMDb ID: ${item.id}`;
+            
+            colImg.appendChild(card_image);
+            colDetails.appendChild(card_title);
+            colDetails.appendChild(card_year);
+            colDetails.appendChild(card_type);
+            colDetails.appendChild(card_text);
+            colDetails.appendChild(card_id);
+            
+            row.appendChild(colImg);
+            row.appendChild(colDetails);
+            card.appendChild(row);
+
+            card.addEventListener("click", function () {
+                document.querySelector("#id").value = item.id;
+                // Close modal and scroll to watch form
+                closeSearchModal();
+                document.querySelector("#id").scrollIntoView({behavior: 'smooth', block: 'center'});
+            });
+
+            resultsContainer.appendChild(card);
+        }
+
+        // Render results for current page
+        function renderResultsPage(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageResults = searchResults.slice(startIndex, endIndex);
+            
+            const resultsContainer = document.querySelector("#search-results");
+            resultsContainer.innerHTML = "";
+            
+            if (pageResults.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-search display-5"></i>
+                        <p class="mt-2 mb-0">No results found</p>
+                        <small class="text-muted">Try a different search term</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            pageResults.forEach(item => {
+                add_result(item);
+            });
+            
+            // Update pagination controls
+            updatePaginationControls();
+        }
+        
+        // Update pagination controls
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(searchResults.length / itemsPerPage);
+            const paginationContainer = document.querySelector("#pagination-controls");
+            const statsContainer = document.querySelector("#search-stats");
+            
+            if (totalPages <= 1) {
+                paginationContainer.classList.add("d-none");
+                statsContainer.classList.add("d-none");
+                return;
+            }
+            
+            paginationContainer.classList.remove("d-none");
+            statsContainer.classList.remove("d-none");
+            
+            // Update stats
+            const startIndex = (currentPage - 1) * itemsPerPage + 1;
+            const endIndex = Math.min(currentPage * itemsPerPage, searchResults.length);
+            statsContainer.innerHTML = `Showing ${startIndex}-${endIndex} of ${searchResults.length} results`;
+            
+            // Generate pagination buttons
+            let paginationHTML = "";
+            
+            // Previous button
+            if (currentPage > 1) {
+                paginationHTML += `<button class="btn-pagination" data-page="${currentPage - 1}"><i class="bi bi-chevron-left"></i></button>`;
+            }
+            
+            // Page buttons
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+            
+            if (endPage - startPage + 1 < maxVisiblePages) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<button class="btn-pagination active">${i}</button>`;
+                } else {
+                    paginationHTML += `<button class="btn-pagination" data-page="${i}">${i}</button>`;
+                }
+            }
+            
+            // Next button
+            if (currentPage < totalPages) {
+                paginationHTML += `<button class="btn-pagination" data-page="${currentPage + 1}"><i class="bi bi-chevron-right"></i></button>`;
+            }
+            
+            paginationContainer.innerHTML = paginationHTML;
+            
+            // Add event listeners to pagination buttons
+            document.querySelectorAll(".btn-pagination[data-page]").forEach(button => {
+                button.addEventListener("click", function() {
+                    currentPage = parseInt(this.getAttribute("data-page"));
+                    renderResultsPage(currentPage);
+                });
+            });
+        }
+
+        function search() {
+            let q = currentSearchTerm.trim();
+            
+            if (q.length < 2) {
+                if (q.length === 0) {
+                    // If search box is empty, show default message
+                    document.querySelector("#search-results").innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-search display-5"></i>
+                            <p class="mt-2 mb-0">Search results will appear here</p>
+                            <small class="text-muted">Type to search for movies or TV series</small>
+                        </div>
+                    `;
+                } else {
+                    // If less than 2 characters, show appropriate message
+                    document.querySelector("#search-results").innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-search display-5"></i>
+                            <p class="mt-2 mb-0">Enter at least 2 characters to search</p>
+                            <small class="text-muted">Try searching for movies or TV shows</small>
+                        </div>
+                    `;
+                }
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+                return;
+            }
+            
+            q = q.replaceAll(" ", "_");
+            
+            // Open modal first
+            openSearchModal();
+            
+            const resultsContainer = document.querySelector("#search-results");
+            resultsContainer.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Searching...</span>
+                    </div>
+                    <p class="mt-2 mb-0">Searching for "${currentSearchTerm}"</p>
+                </div>
+            `;
+            
+            document.querySelector("#pagination-controls").classList.add("d-none");
+            document.querySelector("#search-stats").classList.add("d-none");
+
+            // Using jQuery (JSON-P)
+            jQuery.ajax({
+                url: `https://sg.media-imdb.com/suggests/${q.charAt(0).toLowerCase()}/${q}.json`,
+                dataType: 'jsonp',
+                cache: true,
+                jsonp: false,
+                jsonpCallback: `imdb$${q}`
+            }).then(function (results) {
+                searchResults = [];
+                currentPage = 1;
+                
+                if (results.d && results.d.length > 0) {
+                    for (let item in results.d) {
+                        item = results.d[item];
+                        if (item.id && item.id.slice(0, 2) === 'tt') {
+                            searchResults.push(item);
+                        }
+                    }
+                }
+                
+                if (searchResults.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="bi bi-search display-5"></i>
+                            <p class="mt-2 mb-0">No results found for "${currentSearchTerm}"</p>
+                            <small class="text-muted">Try a different search term</small>
+                        </div>
+                    `;
+                    document.querySelector("#pagination-controls").classList.add("d-none");
+                    document.querySelector("#search-stats").classList.add("d-none");
+                    return;
+                }
+                
+                // Render first page
+                renderResultsPage(currentPage);
+            }).fail(function() {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-exclamation-triangle display-5"></i>
+                        <p class="mt-2 mb-0">Error occurred while searching</p>
+                        <small class="text-muted">Please try again later</small>
+                    </div>
+                `;
+                document.querySelector("#pagination-controls").classList.add("d-none");
+                document.querySelector("#search-stats").classList.add("d-none");
+            });
+        }
+
+        // Add event listener for header search input
+        document.querySelector("#header-search").addEventListener('input', function() {
+            // Debounce the search from header
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(searchFromHeader, 500);
+        });
+        
+        // Allow Enter key to trigger search from header
+        document.querySelector("#header-search").addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchFromHeader();
+            }
+        });
+        
+        // Add event listener for modal search input
+        document.querySelector("#modal-search-input").addEventListener('input', function() {
+            // Debounce the search from modal
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(searchFromModal, 500);
+        });
+        
+        // Allow Enter key to trigger search from modal
+        document.querySelector("#modal-search-input").addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchFromModal();
+            }
+        });
+
+        function get_iframe() {
+            const iframe = document.querySelector('iframe');
+            const id = document.querySelector('#id').value.trim();
+            const season = document.querySelector('#season').value;
+            const episode = document.querySelector('#episode').value;
+            const title_tag = document.querySelector('title');
+
+            // Validate IMDb ID format
+            if (!id || !id.startsWith('tt') || id.length < 3) {
+                alert('Please enter a valid IMDb ID (e.g., tt1553656)');
+                return;
+            }
+
+            if (season && episode) {
+                iframe.src = `https://multiembed.mov/?video_id=${id}&s=${season}&e=${episode}`;
+            } else {
+                iframe.src = `https://multiembed.mov/?video_id=${id}`;
+            }
+
+            jQuery.ajax({
+                url: `https://sg.media-imdb.com/suggests/${id.charAt(2).toLowerCase()}/${id}.json`,
+                dataType: 'jsonp',
+                cache: true,
+                jsonp: false,
+                jsonpCallback: `imdb$${id}`
+            }).then(function (results) {
+                let item = null;
+                if (results.d) {
+                    for (var i = 0; i < results.d.length; i++) {
+                        if (results.d[i].id && results.d[i].id.slice(0, 2) === 'tt') {
+                            item = results.d[i];
+                            break;
+                        }
+                    }
+                }
+
+                const title = item ? item.l : 'Unknown Title';
+
+                var watched = localStorage.getItem('watched');
+
+                if (watched === null) {
+                    watched = [];
+                } else {
+                    watched = JSON.parse(watched);
+                }
+
+                const current = {
+                    id: id,
+                    title: title,
+                    season: season,
+                    episode: episode
+                };
+
+                // Check if already in history to avoid duplicates
+                const exists = watched.some(entry => 
+                    entry.id === current.id && 
+                    entry.season === current.season && 
+                    entry.episode === current.episode
+                );
+                
+                if (!exists) {
+                    watched.push(current);
+                    localStorage.setItem('watched', JSON.stringify(watched));
+                }
+
+                update_watched();
+
+                title_tag.innerHTML = `Streaming - ${title}`;
+
+            });
+
+            history.pushState({}, null, `?id=${id}&s=${season}&e=${episode}`);
+
+            // Smooth scroll to player
+            document.querySelector('.player-container').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function update_watched() {
+            var watched = localStorage.getItem('watched');
+            if (watched === null) {
+                watched = [];
+            } else {
+                watched = JSON.parse(watched);
+            }
+
+            var table = document.querySelector('tbody');
+            table.innerHTML = '';
+
+            if (watched.length === 0) {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 3;
+                cell.innerHTML = 'No watch history yet';
+                cell.classList.add('text-center', 'py-3', 'text-muted', 'small');
+                row.appendChild(cell);
+                table.appendChild(row);
+                return;
+            }
+
+            // Show only last 10 items
+            for (var i = 0; i < Math.min(watched.length, 10); i++) {
+                var item = watched[watched.length - i - 1];
+
+                var row = document.createElement('tr');
+                row.dataset.item = JSON.stringify(item);
+                row.style.cursor = 'pointer';
+
+                var title = document.createElement('td');
+                title.innerHTML = item.title;
+                title.className = 'small';
+
+                var id = document.createElement('td');
+                id.innerHTML = item.id;
+                id.className = 'small';
+
+                var se = document.createElement('td');
+                se.innerHTML = item.season ? `${item.season}/${item.episode}` : '-';
+                se.className = 'small';
+
+                row.appendChild(title);
+                row.appendChild(id);
+                row.appendChild(se);
+
+                row.addEventListener('click', function () {
+                    const itemData = JSON.parse(this.dataset.item);
+                    window.location.href = `?id=${itemData.id}&s=${itemData.season}&e=${itemData.episode}`;
+                });
+
+                table.appendChild(row);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (urlParams.has('id')) {
+                document.querySelector('#id').value = urlParams.get('id');
+                document.querySelector('#season').value = urlParams.get('s') || '';
+                document.querySelector('#episode').value = urlParams.get('e') || '';
+                get_iframe();
+            }
+
+            update_watched();
+            
+            // Close modal when clicking outside
+            document.getElementById("search-results-modal").addEventListener("click", function(event) {
+                if (event.target === this) {
+                    closeSearchModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById("search-results-modal").style.display === "block") {
+                    closeSearchModal();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
